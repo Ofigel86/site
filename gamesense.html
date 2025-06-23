@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>misssense</title>
+    <style>
+        /* Основные стили */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Фиолетовый анимированный градиент */
+        body {
+            background: linear-gradient(-45deg, #4a00e0, #8e2de2, #c94bff, #f857a6);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            position: relative;
+        }
+
+        /* Ключевые кадры для анимации фона */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Контейнер для контента */
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* ОБНОВЛЕННЫЕ СТИЛИ ТЕКСТА (ЯРЧЕ) */
+        h1 {
+            font-size: 30px;
+            text-shadow: 0 0 10px #ff79c6, 0 0 20px #ff2d9e;
+            margin-bottom: 20px;
+            color: #ff9ff3;
+            animation: pulse 2s infinite;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #ff79c6;
+            text-shadow: 0 0 10px #ff79c6;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 15px 0;
+            color: #e0b0ff;
+            font-weight: 500;
+        }
+
+        b {
+            color: #ff79c6;
+            font-weight: bold;
+        }
+
+        .fignya {
+            animation: color-change 3s infinite;
+            font-weight: bold;
+        }
+
+        /* Яркая анимация цвета */
+        @keyframes color-change {
+            0%   { color: #ff79c6; }
+            50%  { color: #ff2d9e; }
+            100% { color: #ff79c6; }
+        }
+
+        /* Анимация списка */
+        .slide-in li {
+            animation: slideIn 0.5s forwards;
+            opacity: 0;
+            transform: translateX(-100px);
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(187, 134, 252, 0.3);
+            border-radius: 5px;
+            list-style-position: inside;
+            font-size: 14px;
+            border: 1px solid #ff79c6;
+            color: #ffffff;
+        }
+
+        .slide-in li:nth-child(1) { animation-delay: 0.2s; }
+        .slide-in li:nth-child(2) { animation-delay: 0.4s; }
+        .slide-in li:nth-child(3) { animation-delay: 0.6s; }
+        .slide-in li:nth-child(4) { animation-delay: 0.8s; }
+        .slide-in li:nth-child(5) { animation-delay: 1.0s; }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Стили для медиа-контейнера */
+        .media-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .zoom {
+            transition: transform 0.3s ease;
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border: 2px solid #bb86fc;
+        }
+
+        .zoom:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ff79c6;
+        }
+
+        .weather {
+            background: rgba(104, 58, 183, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            min-width: 216px;
+            border: 1px solid #bb86fc;
+        }
+
+        /* Частицы */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        /* ОБНОВЛЕННЫЕ СТИЛИ ДЛЯ ВКЛАДОК (ВЫШЕ НА СТРАНИЦЕ) */
+        .tab-container {
+            max-width: 1200px;
+            margin: 10px auto 30px; /* Уменьшил верхний отступ */
+        }
+        
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            justify-content: center;
+            position: sticky;
+            top: 10px; /* Фиксируем вверху */
+            z-index: 10;
+            background: rgba(74, 0, 224, 0.7); /* Фон для кнопок */
+            padding: 10px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .tab-btn {
+            background: rgba(104, 58, 183, 0.3);
+            border: none;
+            color: #e0b0ff;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-right: 10px;
+            transition: all 0.3s;
+            border: 1px solid #bb86fc;
+        }
+        
+        .tab-btn.active {
+            background: rgba(187, 134, 252, 0.5);
+            color: white;
+            box-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
+        }
+        
+        .tab-btn:hover {
+            background: rgba(187, 134, 252, 0.4);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background: rgba(104, 58, 183, 0.2);
+            border-radius: 5px;
+            border: 1px solid #bb86fc;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .channels-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .channel-card {
+            background: rgba(187, 134, 252, 0.2);
+            border-radius: 5px;
+            padding: 15px;
+            border: 1px solid #bb86fc;
+            transition: all 0.3s;
+        }
+        
+        .channel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(187, 134, 252, 0.3);
+            background: rgba(187, 134, 252, 0.3);
+        }
+        
+        .channel-name {
+            color: #ff79c6;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .channel-link {
+            color: #c084fc;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            transition: color 0.3s;
+            border: 1px solid #bb86fc;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        
+        .channel-link:hover {
+            color: #ff79c6;
+            background: rgba(187, 134, 252, 0.2);
+            text-decoration: none;
+        }
+
+        /* ОБНОВЛЕННЫЕ СТИЛИ ДЛЯ ИГРЫ (ТЕПЕРЬ ВО ВКЛАДКЕ) */
+        .game-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .dino-game {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #ff79c6;
+            box-shadow: 0 0 15px rgba(255, 121, 198, 0.8);
+            width: 320px;
+        }
+
+        #dinoCanvas {
+            background: #ffffff;
+            border-radius: 5px;
+            display: block;
+            width: 300px;
+            height: 100px;
+        }
+
+        .dino-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        #dinoStartBtn {
+            background: #ff79c6;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        #dinoStartBtn:hover {
+            background: #ff5cb8;
+            transform: scale(1.05);
+        }
+
+        #dinoScore {
+            color: #bb86fc;
+            font-weight: bold;
+        }
+
+        #dinoInstructions {
+            color: #c084fc;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .media-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+            
+            .tab-buttons {
+                flex-direction: column;
+                position: static;
+                backdrop-filter: none;
+            }
+            
+            .tab-btn {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            
+            .channels-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .dino-game {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="content">
+        <h1 class="pulse">Запомни gamesense хуже Neverlose</h1>
+        <p>Запомни <b class="fignya">Weave</b> v2-2.5 хуже чем <b>onetap</b> v3 crack</p>
+        <h2 class="glow">Но вейв может того тапать :0</h2>
+        
+        <!-- Вкладки -->
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="openTab('main-content')">Главная</button>
+                <button class="tab-btn" onclick="openTab('channels-content')">Каналы</button>
+                <button class="tab-btn" onclick="openTab('game-content')">Игра</button>
+            </div>
+            
+            <!-- Основной контент -->
+            <div id="main-content" class="tab-content active">
+                <ol class="slide-in">
+                    <li>Weave v2 проигрывает onetap v3 по резольверу</li>
+                    <li>weave v2.5 есть Roll aa в отличии onetap v3</li>
+                    <li>Weave v2.5 анти аимы на уровне onetap v3</li>
+                    <li>Fatality может быть лучше onetap v3 по резольверу</li>
+                    <li>Фаталити может сравнится с Weave 2.5</li>
+                </ol>
+                
+                <div class="media-container">
+                    <img src="https://i.ytimg.com/vi/xmeEb34QorE/maxresdefault.jpg" alt="Gamesense" class="zoom">
+                    <div class="weather">
+                        <iframe src="https://www.meteoblue.com/en/weather/widget/daily/ip_romania_675514?geoloc=fixed&days=4&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&precipunit=MILLIMETER&coloured=coloured&pictoicon=1&maxtemperature=1&mintemperature=1&windspeed=1&windgust=0&winddirection=1&uv=0&humidity=0&precipitation=1&precipitationprobability=1&spot=1&pressure=0&layout=light" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>
+                        <div><a href="https://www.meteoblue.com/en/weather/week/ip_romania_675514" target="_blank" rel="noopener">meteoblue</a></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Вкладка с каналами -->
+            <div id="channels-content" class="tab-content">
+                <div class="channels-list" id="channels-list">
+                    <!-- Каналы добавляются через JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Новая вкладка с игрой -->
+            <div id="game-content" class="tab-content">
+                <div class="game-container">
+                    <div class="dino-game">
+                        <canvas id="dinoCanvas" width="300" height="100"></canvas>
+                        <div class="dino-controls">
+                            <button id="dinoStartBtn">Старт</button>
+                            <div id="dinoScore">Очки: 0</div>
+                        </div>
+                        <div id="dinoInstructions">Пробел/Клик = прыжок</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Подключаем particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+        // Инициализация частиц
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#d8b4fe" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.7, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: { 
+                        enable: true, 
+                        distance: 150, 
+                        color: "#c084fc", 
+                        opacity: 0.5, 
+                        width: 1 
+                    },
+                    move: { 
+                        enable: true, 
+                        speed: 3, 
+                        direction: "none", 
+                        random: true 
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    }
+                }
+            });
+            
+            // Загрузка каналов
+            loadChannels();
+            
+            // Инициализация игры
+            initDinoGame();
+        });
+        
+        // Функция для переключения вкладок
+        function openTab(tabId) {
+            // Скрыть все вкладки
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Убрать активный класс у всех кнопок
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Показать выбранную вкладку
+            document.getElementById(tabId).classList.add('active');
+            
+            // Сделать кнопку активной
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Функция для загрузки каналов
+        function loadChannels() {
+            const channels = [
+                { name: "Мой кент", url: "https://www.youtube.com/@komor444-l6m" },
+                { name: "Мой недо-канал", url: "https://www.youtube.com/@sasa_didu" },
+                { name: "нравиться", url: "https://www.youtube.com/watch?v=mImFz8mkaHo&list=PLHovnlOusNLiJz3sm0d5i2Evwa2LDLdrg" },
+                { name: "дискорд канал моего друга", url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1" }
+            ];
+            
+            const channelsList = document.getElementById('channels-list');
+            
+            channels.forEach(channel => {
+                const channelCard = document.createElement('div');
+                channelCard.className = 'channel-card';
+                channelCard.innerHTML = `
+                    <div class="channel-name">${channel.name}</div>
+                    <a href="${channel.url}" target="_blank" class="channel-link">Перейти →</a>
+                `;
+                channelsList.appendChild(channelCard);
+            });
+        }
+        
+        // Игра "Динозаврик"
+        function initDinoGame() {
+            const canvas = document.getElementById('dinoCanvas');
+            const ctx = canvas.getContext('2d');
+            const startBtn = document.getElementById('dinoStartBtn');
+            const scoreElement = document.getElementById('dinoScore');
+            
+            // Константы для стабильности
+            const GROUND_Y = 70;
+            const GRAVITY = 0.4;
+            const JUMP_FORCE = 10;
+            
+            const dino = {
+                x: 30,
+                y: GROUND_Y,
+                width: 20,
+                height: 30,
+                jumping: false,
+                velocity: 0
+            };
+            
+            const cactus = {
+                x: canvas.width,
+                y: GROUND_Y,
+                width: 10,
+                height: 20,
+                speed: 3
+            };
+            
+            let score = 0;
+            let gameRunning = false;
+            let animationId;
+            let gameSpeed = 1;
+            let lastTime = 0;
+            
+            function drawDino() {
+                ctx.fillStyle = '#ff79c6';
+                ctx.fillRect(dino.x, dino.y - dino.height, dino.width, dino.height);
+                
+                ctx.fillStyle = 'black';
+                ctx.fillRect(dino.x + 15, dino.y - dino.height + 5, 3, 3);
+                
+                ctx.fillStyle = '#ff79c6';
+                ctx.fillRect(dino.x + 5, dino.y - 5, 4, 5);
+                ctx.fillRect(dino.x + 12, dino.y - 5, 4, 5);
+            }
+            
+            function drawCactus() {
+                ctx.fillStyle = '#00cc00';
+                ctx.fillRect(cactus.x, cactus.y - cactus.height, cactus.width, cactus.height);
+            }
+            
+            function drawGround() {
+                ctx.fillStyle = '#bb86fc';
+                ctx.fillRect(0, GROUND_Y, canvas.width, 2);
+            }
+            
+            function update(timestamp) {
+                if (!lastTime) lastTime = timestamp;
+                const deltaTime = Math.min(100, timestamp - lastTime);
+                lastTime = timestamp;
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Физика динозавра
+                if (dino.jumping) {
+                    dino.y -= dino.velocity;
+                    dino.velocity -= GRAVITY;
+                    
+                    // Приземление
+                    if (dino.y >= GROUND_Y) {
+                        dino.y = GROUND_Y;
+                        dino.jumping = false;
+                        dino.velocity = 0;
+                    }
+                }
+                
+                // Движение кактуса
+                cactus.x -= cactus.speed * gameSpeed;
+                if (cactus.x < -cactus.width) {
+                    cactus.x = canvas.width;
+                    score++;
+                    scoreElement.textContent = `Очки: ${score}`;
+                    
+                    // Постепенное увеличение сложности
+                    if (score % 5 === 0) {
+                        gameSpeed += 0.05;
+                        cactus.speed = Math.min(5, cactus.speed + 0.1);
+                    }
+                }
+                
+                // Проверка столкновения
+                const dinoFeetY = dino.y;
+                const cactusTopY = cactus.y - cactus.height;
+                
+                if (
+                    dino.x + dino.width > cactus.x &&
+                    dino.x < cactus.x + cactus.width &&
+                    dinoFeetY > cactusTopY
+                ) {
+                    gameOver();
+                    return;
+                }
+                
+                // Отрисовка
+                drawGround();
+                drawCactus();
+                drawDino();
+                
+                // Продолжаем игру
+                if (gameRunning) {
+                    animationId = requestAnimationFrame(update);
+                }
+            }
+            
+            function startGame() {
+                if (gameRunning) {
+                    cancelAnimationFrame(animationId);
+                }
+                
+                // Сброс параметров
+                dino.y = GROUND_Y;
+                dino.jumping = false;
+                dino.velocity = 0;
+                cactus.x = canvas.width;
+                score = 0;
+                gameSpeed = 1;
+                cactus.speed = 3;
+                lastTime = 0;
+                
+                scoreElement.textContent = `Очки: ${score}`;
+                startBtn.textContent = "Перезапуск";
+                gameRunning = true;
+                animationId = requestAnimationFrame(update);
+            }
+            
+            function gameOver() {
+                gameRunning = false;
+                cancelAnimationFrame(animationId);
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#ff0000';
+                ctx.font = '20px Arial';
+                ctx.fillText('Конец игры!', 80, 40);
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '16px Arial';
+                ctx.fillText(`Очки: ${score}`, 110, 70);
+            }
+            
+            // Управление
+            document.addEventListener('keydown', (e) => {
+                if ((e.code === 'Space' || e.code === 'ArrowUp') && !dino.jumping && gameRunning) {
+                    dino.jumping = true;
+                    dino.velocity = JUMP_FORCE;
+                }
+            });
+            
+            canvas.addEventListener('click', () => {
+                if (!dino.jumping && gameRunning) {
+                    dino.jumping = true;
+                    dino.velocity = JUMP_FORCE;
+                }
+            });
+            
+            startBtn.addEventListener('click', startGame);
+            
+            // Начальное состояние
+            drawGround();
+            drawDino();
+            drawCactus();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+/* Добавляем в конец файла стилей */
+.dino-game {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 10px;
+    border: 2px solid #ff79c6;
+    box-shadow: 0 0 15px rgba(255, 121, 198, 0.8);
+    z-index: 100;
+    width: 300px;
+}
+
+#dinoCanvas {
+    background: #ffffff;
+    border-radius: 5px;
+    display: block;
+}
+
+.dino-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+#startBtn {
+    background: #ff79c6;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    margin: 5px;
+}
+
+#startBtn:hover {
+    background: #ff5cb8;
+    transform: scale(1.05);
+}
+
+#score {
+    color: #bb86fc;
+    font-weight: bold;
+    margin: 5px;
+}
+
+#instructions {
+    color: #c084fc;
+    font-size: 12px;
+    width: 100%;
+    text-align: center;
+    margin-top: 5px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .dino-game {
+        position: static;
+        margin: 20px auto;
+        width: 90%;
+        max-width: 300px;
+    }
+}.dino-game {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 10px;
+    border: 2px solid #ff79c6;
+    box-shadow: 0 0 15px rgba(255, 121, 198, 0.8);
+    z-index: 100;
+    width: 300px;
+}
+
+#dinoCanvas {
+    background: #ffffff;
+    border-radius: 5px;
+    display: block;
+}
+
+.dino-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+#startBtn {
+    background: #ff79c6;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    margin: 5px;
+}
+
+#startBtn:hover {
+    background: #ff5cb8;
+    transform: scale(1.05);
+}
+
+#score {
+    color: #bb86fc;
+    font-weight: bold;
+    margin: 5px;
+}
+
+#instructions {
+    color: #c084fc;
+    font-size: 12px;
+    width: 100%;
+    text-align: center;
+    margin-top: 5px;
+}
