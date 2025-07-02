@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>misssense | Лучшие чит-клиенты для CS2</title>
+    <title>misssense | Спасибо за всё!</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -22,6 +22,10 @@
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             --radius: 16px;
+            --dino-bg: #f7f7f7;
+            --dino-ground: #555;
+            --dino-sprite: #333;
+            --dino-obstacle: #2e8b57;
         }
 
         * {
@@ -47,6 +51,10 @@
             --card-border: rgba(106, 17, 203, 0.2);
             --text: #333;
             --text-secondary: #555;
+            --dino-bg: #87ceeb;
+            --dino-ground: #8a5a44;
+            --dino-sprite: #444;
+            --dino-obstacle: #2e8b57;
         }
 
         body.dark-theme {
@@ -54,11 +62,19 @@
             --card-border: rgba(148, 85, 255, 0.4);
             --text: #e0e0e0;
             --text-secondary: #a0a0a0;
+            --dino-bg: #222;
+            --dino-ground: #333;
+            --dino-sprite: #ddd;
+            --dino-obstacle: #3cb371;
         }
 
         body.purple-theme {
             --card-bg: rgba(70, 20, 120, 0.8);
             --card-border: rgba(200, 100, 255, 0.3);
+            --dino-bg: #4a235a;
+            --dino-ground: #6c3483;
+            --dino-sprite: #f39c12;
+            --dino-obstacle: #9b59b6;
         }
 
         @keyframes gradientBG {
@@ -373,12 +389,31 @@
         }
 
         /* Games content */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            border: 1px solid var(--card-border);
+            transition: var(--transition);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Dino Game */
         .dino-container {
             background: var(--card-bg);
             border-radius: var(--radius);
             padding: 25px;
             border: 1px solid var(--card-border);
-            text-align: center;
         }
 
         .dino-header {
@@ -394,8 +429,6 @@
             display: flex;
             gap: 20px;
             font-size: 1.2rem;
-            justify-content: center;
-            width: 100%;
         }
 
         .dino-stat {
@@ -407,47 +440,44 @@
             gap: 8px;
         }
 
-        .dino-message {
-            padding: 40px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 16px;
-            margin: 20px 0;
+        .dino-game {
             position: relative;
-            overflow: hidden;
-        }
-
-        .dino-message::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 5px;
-            background: var(--accent);
-            animation: progress 3s infinite linear;
+            height: 300px;
+            background: var(--dino-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--accent);
         }
 
-        @keyframes progress {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .dino-message i {
-            font-size: 4rem;
-            color: var(--accent);
-            margin-bottom: 20px;
+        #dino-canvas {
+            width: 100%;
+            height: 100%;
             display: block;
-            animation: bounce 2s infinite;
         }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            z-index: 10;
+            color: white;
+        }
+        
+        .game-over h3 {
+            color: var(--accent);
+            margin-bottom: 15px;
         }
 
         .dino-controls {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             margin-top: 20px;
             flex-wrap: wrap;
             gap: 15px;
@@ -462,11 +492,9 @@
             cursor: pointer;
             font-weight: 600;
             transition: var(--transition);
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 8px;
-            position: relative;
-            overflow: hidden;
         }
 
         .dino-btn:hover {
@@ -474,274 +502,98 @@
             transform: scale(1.05);
         }
 
-        .dino-btn::after {
+        .dino-settings {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dino-setting {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dino-setting:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dino-setting.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Special Message */
+        .special-message {
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+            border: 2px dashed white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .special-message::before {
             content: '';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: rgba(255, 255, 255, 0.1);
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
             transform: rotate(30deg);
-            transition: all 0.6s ease;
-            opacity: 0;
-        }
-
-        .dino-btn:hover::after {
-            opacity: 1;
-            transform: rotate(30deg) translate(0, 0);
-        }
-
-        /* Forum styles */
-        .forum-container {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 25px;
-            border: 1px solid var(--card-border);
-        }
-
-        .forum-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .post-form {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: var(--radius);
-            margin-bottom: 30px;
-            transition: all 0.3s ease;
-        }
-
-        .post-form:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: var(--accent);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(255, 78, 80, 0.3);
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .btn-submit {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-submit:hover {
-            background: #ff2d2f;
-            transform: translateY(-3px);
-        }
-
-        .posts-container {
-            margin-top: 30px;
-        }
-
-        .post {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--accent);
-            transition: var(--transition);
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .post:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .post-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .post-author {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-
-        .post-author img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            background: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .post-date {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .post-content {
-            line-height: 1.6;
-            margin-bottom: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-            padding: 5px 10px;
-            border-radius: 20px;
-        }
-
-        .post-action:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--accent);
-        }
-
-        /* Comments section */
-        .comments-section {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: none;
-        }
-
-        .comments-section.expanded {
-            display: block;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .comments-list {
-            margin-bottom: 20px;
-        }
-
-        .comment {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            padding: 12px 15px;
-            margin-bottom: 12px;
-            position: relative;
-            transition: all 0.3s ease;
-            animation: slideIn 0.3s ease-out;
+            z-index: 0;
+            animation: rotate 20s linear infinite;
         }
         
-        .comment:hover {
-            background: rgba(255, 255, 255, 0.05);
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
+        
+        .special-message-content {
+            position: relative;
+            z-index: 1;
         }
-
-        .comment-author {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--accent);
-        }
-
-        .comment-date {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-
-        .comment-content {
-            font-size: 0.95rem;
-            line-height: 1.5;
-            padding-left: 10px;
-            border-left: 2px solid var(--accent);
-        }
-
-        .comment-form {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .comment-input {
-            flex: 1;
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-
-        .comment-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .comment-submit {
-            background: var(--accent);
+        
+        .special-message h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: var(--transition);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-
-        .comment-submit:hover {
-            background: #ff2d2f;
+        
+        .special-message p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: white;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .heart-icon {
+            color: #ff2d2f;
+            font-size: 3rem;
+            animation: heartbeat 1.2s infinite;
+            display: inline-block;
+            margin: 0 10px;
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
         }
 
         /* Particles */
@@ -768,28 +620,17 @@
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--card-bg);
-            color: var(--text);
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            transform: translateX(150%);
-            transition: transform 0.5s ease;
-            border-left: 4px solid var(--accent);
+        
+        /* Animation for special text */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
-
-        .notification.show {
-            transform: translateX(0);
+        
+        .floating-text {
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
         }
 
         /* Responsive */
@@ -815,13 +656,12 @@
                 align-items: stretch;
             }
             
-            .comment-form {
-                flex-direction: column;
+            .special-message h2 {
+                font-size: 1.8rem;
             }
             
-            .post-author {
-                flex-direction: column;
-                align-items: flex-start;
+            .special-message p {
+                font-size: 1rem;
             }
         }
     </style>
@@ -830,13 +670,17 @@
     <!-- Particles Background -->
     <div id="particles-js"></div>
     
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <i class="fas fa-paper-plane"></i>
-        <span>Открываю ваш Telegram...</span>
-    </div>
-    
     <div class="container">
+        <!-- Special Message -->
+        <div class="special-message">
+            <div class="special-message-content">
+                <h2><i class="fas fa-heart heart-icon"></i> Спасибо за всё! <i class="fas fa-heart heart-icon"></i></h2>
+                <p>Дорогой друг, я знаю, что тебе сейчас грустно, но хочу чтобы ты знал - наша совместная работа была невероятно ценной для меня. Каждый твой вклад сделал этот проект особенным.</p>
+                <p>Помни, что даже если мы больше не работаем вместе, я всегда буду благодарен за то время, что мы провели, создавая этот сайт. Твои идеи и энтузиазм вдохновляли меня!</p>
+                <p class="floating-text">Ты навсегда останешься частью misssense!</p>
+            </div>
+        </div>
+        
         <header class="site-header">
             <div class="logo">
                 <i class="fas fa-gamepad logo-icon"></i>
@@ -861,9 +705,6 @@
                 </button>
                 <button class="tab-btn" data-tab="games">
                     <i class="fas fa-gamepad"></i> Игры
-                </button>
-                <button class="tab-btn" data-tab="forum">
-                    <i class="fas fa-comments"></i> Форум
                 </button>
                 <button class="tab-btn" data-tab="info">
                     <i class="fas fa-info-circle"></i> О нас
@@ -986,67 +827,56 @@
             <!-- Games Tab -->
             <div id="games" class="tab-content">
                 <h2><i class="fas fa-gamepad"></i> Игра "Динозаврик"</h2>
-                <p>Временно недоступна - мы работаем над улучшением игрового процесса!</p>
+                <p>Специально для тебя я починил игру! Наслаждайся :)</p>
                 
                 <div class="dino-container">
                     <div class="dino-header">
                         <div class="dino-stats">
                             <div class="dino-stat">
-                                <i class="fas fa-tools"></i>
-                                <span>Игра в разработке</span>
+                                <i class="fas fa-star"></i>
+                                <span id="dino-score">Очки: 0</span>
                             </div>
                             <div class="dino-stat">
-                                <i class="fas fa-clock"></i>
-                                <span>Скоро будет доступна</span>
+                                <i class="fas fa-trophy"></i>
+                                <span id="dino-highscore">Рекорд: 0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="dino-settings">
+                            <div class="dino-setting active" data-difficulty="easy">
+                                <i class="fas fa-baby"></i> Легко
+                            </div>
+                            <div class="dino-setting" data-difficulty="medium">
+                                <i class="fas fa-running"></i> Средне
+                            </div>
+                            <div class="dino-setting" data-difficulty="hard">
+                                <i class="fas fa-fire"></i> Сложно
                             </div>
                         </div>
                     </div>
                     
-                    <div class="dino-message">
-                        <i class="fas fa-dragon"></i>
-                        <h3>Динозаврик на переработке!</h3>
-                        <p>Мы полностью перерабатываем игру "Динозаврик", чтобы сделать её ещё лучше. Ожидайте новую версию с улучшенной графикой, физикой и новыми функциями в ближайшее время!</p>
-                        <p>А пока вы можете обсудить игру на нашем форуме и поделиться своими идеями для улучшения.</p>
+                    <div class="dino-game">
+                        <canvas id="dino-canvas"></canvas>
+                        <div class="game-over" id="game-over">
+                            <h3>Игра окончена!</h3>
+                            <p>Ваш счет: <span id="final-score">0</span></p>
+                            <button id="restart-game" class="dino-btn">
+                                <i class="fas fa-redo"></i> Играть снова
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="dino-controls">
-                        <button class="dino-btn" id="notify-launch">
-                            <i class="fas fa-bell"></i> Уведомить о запуске
+                        <button id="dino-start" class="dino-btn">
+                            <i class="fas fa-play"></i> Начать игру
                         </button>
-                        <button class="dino-btn" id="suggest-idea">
-                            <i class="fas fa-lightbulb"></i> Предложить идею
-                        </button>
+                        <div class="dino-instructions">
+                            <i class="fas fa-info-circle"></i> Пробел/Клик = прыжок, Стрелка вниз = присесть
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Forum Tab -->
-            <div id="forum" class="tab-content">
-                <div class="forum-header">
-                    <h2><i class="fas fa-comments"></i> Форум сообщества</h2>
-                    <p>Обсуждайте чит-клиенты, делитесь опытом и задавайте вопросы</p>
-                </div>
-                
-                <div class="post-form">
-                    <h3><i class="fas fa-edit"></i> Создать новое сообщение</h3>
-                    <div class="form-group">
-                        <label for="post-title">Заголовок</label>
-                        <input type="text" id="post-title" class="form-control" placeholder="Введите заголовок сообщения">
-                    </div>
-                    <div class="form-group">
-                        <label for="post-content">Сообщение</label>
-                        <textarea id="post-content" class="form-control" placeholder="Напишите ваше сообщение..."></textarea>
-                    </div>
-                    <button id="submit-post" class="btn-submit">
-                        <i class="fas fa-paper-plane"></i> Опубликовать
-                    </button>
-                </div>
-                
-                <div class="posts-container" id="posts-container">
-                    <!-- Posts will be loaded here -->
-                </div>
-            </div>
-
             <!-- Info Tab -->
             <div id="info" class="tab-content">
                 <h2><i class="fas fa-info-circle"></i> О проекте misssense</h2>
@@ -1063,13 +893,25 @@
                         <h3 class="channel-name">Отказ от ответственности</h3>
                         <p class="channel-desc">Использование читов может нарушать правила игр и привести к блокировке аккаунта. Все материалы представлены в ознакомительных целях.</p>
                     </div>
+                    
+                    <div class="channel-card">
+                        <div class="channel-icon"><i class="fas fa-heart"></i></div>
+                        <h3 class="channel-name">Особая благодарность</h3>
+                        <p class="channel-desc">Этот проект не был бы таким особенным без твоего участия. Твои идеи, критика и поддержка сделали misssense тем, чем он является сегодня.</p>
+                    </div>
+                    
+                    <div class="channel-card">
+                        <div class="channel-icon"><i class="fas fa-handshake"></i></div>
+                        <h3 class="channel-name">Наше партнёрство</h3>
+                        <p class="channel-desc">Даже если мы больше не работаем вместе, я всегда буду с теплотой вспоминать наше сотрудничество. Ты навсегда останешься частью истории misssense!</p>
+                    </div>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p class="copyright">© 2023 misssense | Все права защищены</p>
-            <p class="copyright">Сайт создан для образовательных целей</p>
+            <p class="copyright">© 2023 misssense | Создано с <i class="fas fa-heart" style="color: #ff4e50;"></i> для особого человека</p>
+            <p class="copyright">Ты всегда будешь частью этого проекта!</p>
         </footer>
     </div>
 
@@ -1079,39 +921,37 @@
         particlesJS('particles-js', {
             particles: {
                 number: { 
-                    value: 80, 
+                    value: 120, 
                     density: { 
                         enable: true, 
                         value_area: 800 
                     } 
                 },
                 color: { 
-                    value: "#d8b4fe" 
+                    value: "#ffb6c1" 
                 },
                 shape: { 
-                    type: "circle" 
+                    type: "heart",
+                    options: {
+                        heart: {
+                            fill: true
+                        }
+                    }
                 },
                 opacity: { 
                     value: 0.7, 
                     random: true 
                 },
                 size: { 
-                    value: 3, 
+                    value: 10, 
                     random: true 
-                },
-                line_linked: { 
-                    enable: true, 
-                    distance: 150, 
-                    color: "#c084fc", 
-                    opacity: 0.5, 
-                    width: 1 
                 },
                 move: { 
                     enable: true, 
-                    speed: 3, 
-                    direction: "none", 
+                    speed: 2, 
+                    direction: "top", 
                     random: true,
-                    out_mode: "bounce"
+                    out_mode: "out"
                 }
             },
             interactivity: {
@@ -1133,7 +973,7 @@
                         duration: 0.4 
                     },
                     push: { 
-                        particles_nb: 4 
+                        particles_nb: 8 
                     }
                 }
             }
@@ -1189,313 +1029,248 @@
         document.body.className = `${savedTheme}-theme`;
         document.querySelector(`.theme-btn[data-theme="${savedTheme}"]`).classList.add('active');
 
-        // Telegram redirection functionality
-        function setupTelegramRedirect() {
-            const suggestBtn = document.getElementById('suggest-idea');
-            const notifyBtn = document.getElementById('notify-launch');
-            const notification = document.getElementById('notification');
+        // Dino Game - Working version
+        function initDinoGame() {
+            const canvas = document.getElementById('dino-canvas');
+            const ctx = canvas.getContext('2d');
+            const startBtn = document.getElementById('dino-start');
+            const restartBtn = document.getElementById('restart-game');
+            const scoreElement = document.getElementById('dino-score');
+            const highScoreElement = document.getElementById('dino-highscore');
+            const finalScoreElement = document.getElementById('final-score');
+            const gameOverElement = document.getElementById('game-over');
             
-            // Replace with your actual Telegram URL
-            const TELEGRAM_URL = "https://t.me/Sana_aga";
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
             
-            // Function to open Telegram with notification
-            function openTelegram() {
-                // Show notification
-                notification.classList.add('show');
+            // Game variables
+            let gameSpeed = 5;
+            let score = 0;
+            let highScore = localStorage.getItem('dinoHighScore') || 0;
+            let gameRunning = false;
+            let gameLoop;
+            
+            // Set high score
+            highScoreElement.textContent = `Рекорд: ${highScore}`;
+            
+            // Dino properties
+            const dino = {
+                x: 50,
+                y: canvas.height - 120,
+                width: 40,
+                height: 60,
+                jumping: false,
+                ducking: false,
+                jumpVelocity: 0,
+                jumpHeight: 20,
+                gravity: 0.8,
+                groundY: canvas.height - 50
+            };
+            
+            // Obstacles
+            let obstacles = [];
+            
+            // Draw dino
+            function drawDino() {
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dino-sprite').trim() || '#333';
                 
-                // Open Telegram after a small delay
-                setTimeout(() => {
-                    window.open(TELEGRAM_URL, '_blank', 'noopener,noreferrer');
-                }, 1000);
-                
-                // Hide notification after 3 seconds
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
+                if (dino.ducking) {
+                    // Ducking position
+                    ctx.fillRect(dino.x, dino.y + 20, dino.width, dino.height - 20);
+                } else {
+                    // Standing position
+                    ctx.fillRect(dino.x, dino.y, dino.width, dino.height);
+                    
+                    // Draw eye
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(dino.x + 30, dino.y + 15, 5, 5);
+                }
             }
             
-            // Add event listener to "Suggest Idea" button
-            suggestBtn.addEventListener('click', openTelegram);
+            // Draw ground
+            function drawGround() {
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dino-ground').trim() || '#555';
+                ctx.fillRect(0, dino.groundY, canvas.width, canvas.height - dino.groundY);
+            }
             
-            // Add event listener to "Notify Launch" button
-            notifyBtn.addEventListener('click', () => {
-                notification.querySelector('span').textContent = "Спасибо! Мы уведомим вас о запуске.";
-                notification.classList.add('show');
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            });
-        }
-
-        // Forum functionality with comments
-        function initForum() {
-            const submitBtn = document.getElementById('submit-post');
-            const postsContainer = document.getElementById('posts-container');
-            
-            // Sample posts data with comments
-            const samplePosts = [
-                {
-                    id: 1,
-                    title: "Какой чит-клиент выбрать?",
-                    content: "Привет всем! Я новичок в CS2 и хотел бы узнать, какой чит-клиент лучше выбрать для начала?",
-                    author: "Новичок",
-                    authorInitial: "Н",
-                    date: "01.07.2023",
-                    likes: 8,
-                    comments: [
-                        {
-                            id: 101,
-                            author: "Опытный игрок",
-                            authorInitial: "О",
-                            content: "Я рекомендую начать с Weave v2.5 - он стабильный и хорошо подходит для новичков.",
-                            date: "01.07.2023"
-                        },
-                        {
-                            id: 102,
-                            author: "ProPlayer",
-                            authorInitial: "P",
-                            content: "Fatality тоже хорош, но требует больше настроек. Начни с Weave, а потом переходи на что-то посерьёзнее.",
-                            date: "02.07.2023"
-                        }
-                    ]
-                },
-                {
-                    id: 2,
-                    title: "Обзор Weave v2.5",
-                    content: "Поделюсь своими впечатлениями от Weave v2.5. Отличный резольвер и анти-аим, но требует хорошего ПК.",
-                    author: "Опытный игрок",
-                    authorInitial: "О",
-                    date: "30.06.2023",
-                    likes: 15,
-                    comments: [
-                        {
-                            id: 201,
-                            author: "Геймер007",
-                            authorInitial: "Г",
-                            content: "Согласен, у меня тоже хороший опыт с этим клиентом. Особенно нравится система анти-аима.",
-                            date: "01.07.2023"
-                        }
-                    ]
-                }
-            ];
-            
-            // Render posts with comments
-            function renderPosts() {
-                postsContainer.innerHTML = '';
-                
-                samplePosts.forEach(post => {
-                    const postElement = document.createElement('div');
-                    postElement.className = 'post';
-                    postElement.innerHTML = `
-                        <div class="post-header">
-                            <div class="post-author">
-                                <img src="https://ui-avatars.com/api/?name=${post.authorInitial}&background=random" alt="${post.author}">
-                                <div>
-                                    <div class="post-author-name">${post.author}</div>
-                                    <div class="post-date">${post.date}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <h3>${post.title}</h3>
-                        <div class="post-content">${post.content}</div>
-                        <div class="post-actions">
-                            <div class="post-action" data-action="like" data-post-id="${post.id}">
-                                <i class="fas fa-thumbs-up"></i> Нравится (${post.likes})
-                            </div>
-                            <div class="post-action" data-action="comment" data-post-id="${post.id}">
-                                <i class="fas fa-comment"></i> Комментировать (${post.comments.length})
-                            </div>
-                        </div>
-                        <div class="comments-section" id="comments-${post.id}">
-                            <div class="comments-list" id="comments-list-${post.id}">
-                                ${post.comments.map(comment => `
-                                    <div class="comment">
-                                        <div class="comment-header">
-                                            <div class="comment-author">
-                                                <img src="https://ui-avatars.com/api/?name=${comment.authorInitial}&background=random" alt="${comment.author}" style="width: 30px; height: 30px;">
-                                                ${comment.author}
-                                            </div>
-                                            <div class="comment-date">${comment.date}</div>
-                                        </div>
-                                        <div class="comment-content">${comment.content}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <div class="comment-form">
-                                <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Напишите комментарий...">
-                                <button class="comment-submit" data-post-id="${post.id}">Отправить</button>
-                            </div>
-                        </div>
-                    `;
-                    postsContainer.appendChild(postElement);
-                    
-                    // Add event listeners for this post
-                    const commentBtn = postElement.querySelector(`.post-action[data-action="comment"][data-post-id="${post.id}"]`);
-                    const likeBtn = postElement.querySelector(`.post-action[data-action="like"][data-post-id="${post.id}"]`);
-                    const commentSubmit = postElement.querySelector(`.comment-submit[data-post-id="${post.id}"]`);
-                    
-                    commentBtn.addEventListener('click', function() {
-                        const commentsSection = document.getElementById(`comments-${post.id}`);
-                        commentsSection.classList.toggle('expanded');
-                    });
-                    
-                    likeBtn.addEventListener('click', function() {
-                        likePost(post.id);
-                    });
-                    
-                    commentSubmit.addEventListener('click', function() {
-                        addComment(post.id);
-                    });
+            // Draw obstacles
+            function drawObstacles() {
+                obstacles.forEach(obstacle => {
+                    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dino-obstacle').trim() || '#2e8b57';
+                    ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
                 });
             }
             
-            // Add new post
-            submitBtn.addEventListener('click', () => {
-                const title = document.getElementById('post-title').value;
-                const content = document.getElementById('post-content').value;
+            // Draw scene
+            function drawScene() {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                if (!title || !content) {
-                    alert('Пожалуйста, заполните все поля');
-                    return;
+                // Draw background
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dino-bg').trim() || '#f7f7f7';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw ground
+                drawGround();
+                
+                // Draw dino
+                drawDino();
+                
+                // Draw obstacles
+                drawObstacles();
+                
+                // Draw score
+                ctx.fillStyle = '#333';
+                ctx.font = '20px Arial';
+                ctx.fillText(`Очки: ${score}`, 20, 30);
+            }
+            
+            // Update game state
+            function update() {
+                // Update dino position
+                if (dino.jumping) {
+                    dino.y -= dino.jumpVelocity;
+                    dino.jumpVelocity -= dino.gravity;
+                    
+                    if (dino.y >= dino.groundY - dino.height) {
+                        dino.y = dino.groundY - dino.height;
+                        dino.jumping = false;
+                    }
                 }
                 
-                const postElement = document.createElement('div');
-                postElement.className = 'post';
-                postElement.innerHTML = `
-                    <div class="post-header">
-                        <div class="post-author">
-                            <img src="https://ui-avatars.com/api/?name=Вы&background=random" alt="Вы">
-                            <div>
-                                <div class="post-author-name">Вы</div>
-                                <div class="post-date">${new Date().toLocaleDateString()}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <h3>${title}</h3>
-                    <div class="post-content">${content}</div>
-                    <div class="post-actions">
-                        <div class="post-action" data-action="like">
-                            <i class="fas fa-thumbs-up"></i> Нравится (0)
-                        </div>
-                        <div class="post-action" data-action="comment">
-                            <i class="fas fa-comment"></i> Комментировать (0)
-                        </div>
-                    </div>
-                    <div class="comments-section" id="comments-new">
-                        <div class="comments-list" id="comments-list-new"></div>
-                        <div class="comment-form">
-                            <input type="text" class="comment-input" id="comment-input-new" placeholder="Напишите комментарий...">
-                            <button class="comment-submit" data-post-id="new">Отправить</button>
-                        </div>
-                    </div>
-                `;
-                
-                // Add animation
-                postElement.style.opacity = '0';
-                postElement.style.transform = 'translateY(20px)';
-                
-                postsContainer.prepend(postElement);
-                
-                // Animate in
-                setTimeout(() => {
-                    postElement.style.transition = 'all 0.3s ease';
-                    postElement.style.opacity = '1';
-                    postElement.style.transform = 'translateY(0)';
-                }, 10);
-                
-                // Add event listeners for the new post
-                const commentBtn = postElement.querySelector('.post-action[data-action="comment"]');
-                const commentSubmit = postElement.querySelector('.comment-submit');
-                
-                commentBtn.addEventListener('click', function() {
-                    const commentsSection = document.getElementById('comments-new');
-                    commentsSection.classList.toggle('expanded');
+                // Update obstacles
+                obstacles.forEach((obstacle, index) => {
+                    obstacle.x -= gameSpeed;
+                    
+                    // Remove obstacles that are off-screen
+                    if (obstacle.x + obstacle.width < 0) {
+                        obstacles.splice(index, 1);
+                        score += 10;
+                        scoreElement.textContent = `Очки: ${score}`;
+                    }
+                    
+                    // Check collision
+                    if (
+                        dino.x < obstacle.x + obstacle.width &&
+                        dino.x + dino.width > obstacle.x &&
+                        dino.y < obstacle.y + obstacle.height &&
+                        dino.y + dino.height > obstacle.y
+                    ) {
+                        endGame();
+                    }
                 });
                 
-                commentSubmit.addEventListener('click', function() {
-                    addComment('new');
-                });
+                // Generate new obstacles
+                let obstacleChance = 0.01;
+                if (Math.random() < obstacleChance && obstacles.length < 3) {
+                    const height = Math.random() > 0.5 ? 30 : 50;
+                    const width = 20;
+                    obstacles.push({
+                        x: canvas.width,
+                        y: dino.groundY - height,
+                        width: width,
+                        height: height
+                    });
+                }
                 
-                // Clear form
-                document.getElementById('post-title').value = '';
-                document.getElementById('post-content').value = '';
+                // Increase difficulty
+                if (score > 0 && score % 100 === 0) {
+                    gameSpeed = 5 + Math.floor(score / 100) * 0.5;
+                }
+            }
+            
+            // Game loop
+            function gameStep() {
+                update();
+                drawScene();
+                
+                if (gameRunning) {
+                    gameLoop = requestAnimationFrame(gameStep);
+                }
+            }
+            
+            // Start game
+            function startGame() {
+                if (gameRunning) return;
+                
+                gameRunning = true;
+                score = 0;
+                obstacles = [];
+                gameSpeed = 5;
+                dino.jumping = false;
+                dino.ducking = false;
+                dino.y = dino.groundY - dino.height;
+                
+                scoreElement.textContent = `Очки: ${score}`;
+                gameOverElement.style.display = 'none';
+                
+                gameStep();
+            }
+            
+            // End game
+            function endGame() {
+                gameRunning = false;
+                cancelAnimationFrame(gameLoop);
+                
+                gameOverElement.style.display = 'block';
+                finalScoreElement.textContent = score;
+                
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('dinoHighScore', highScore);
+                    highScoreElement.textContent = `Рекорд: ${highScore}`;
+                }
+            }
+            
+            // Event listeners
+            startBtn.addEventListener('click', startGame);
+            restartBtn.addEventListener('click', startGame);
+            
+            document.addEventListener('keydown', (e) => {
+                if (!gameRunning) return;
+                
+                if ((e.code === 'Space' || e.code === 'ArrowUp') && !dino.jumping && !dino.ducking) {
+                    dino.jumping = true;
+                    dino.jumpVelocity = dino.jumpHeight;
+                }
+                
+                if (e.code === 'ArrowDown') {
+                    dino.ducking = true;
+                }
             });
             
-            // Add comment to post
-            function addComment(postId) {
-                const commentInput = document.getElementById(`comment-input-${postId}`);
-                const commentText = commentInput.value.trim();
-                
-                if (!commentText) {
-                    alert('Пожалуйста, введите текст комментария');
-                    return;
+            document.addEventListener('keyup', (e) => {
+                if (e.code === 'ArrowDown') {
+                    dino.ducking = false;
                 }
+            });
+            
+            canvas.addEventListener('click', () => {
+                if (!gameRunning) return startGame();
                 
-                const commentsList = document.getElementById(`comments-list-${postId}`);
-                const commentElement = document.createElement('div');
-                commentElement.className = 'comment';
-                commentElement.innerHTML = `
-                    <div class="comment-header">
-                        <div class="comment-author">
-                            <img src="https://ui-avatars.com/api/?name=Вы&background=random" alt="Вы" style="width: 30px; height: 30px;">
-                            Вы
-                        </div>
-                        <div class="comment-date">${new Date().toLocaleDateString()}</div>
-                    </div>
-                    <div class="comment-content">${commentText}</div>
-                `;
-                
-                // Add animation
-                commentElement.style.opacity = '0';
-                commentElement.style.transform = 'translateY(10px)';
-                
-                commentsList.appendChild(commentElement);
-                
-                // Animate in
-                setTimeout(() => {
-                    commentElement.style.transition = 'all 0.3s ease';
-                    commentElement.style.opacity = '1';
-                    commentElement.style.transform = 'translateY(0)';
-                }, 10);
-                
-                // Update comment count
-                const commentBtn = document.querySelector(`.post-action[data-action="comment"][data-post-id="${postId}"]`);
-                const currentCount = parseInt(commentBtn.textContent.match(/\((\d+)\)/)[1]) || 0;
-                commentBtn.innerHTML = `<i class="fas fa-comment"></i> Комментировать (${currentCount + 1})`;
-                
-                // Clear input
-                commentInput.value = '';
-                
-                // Expand comments section
-                if (postId !== 'new') {
-                    document.getElementById(`comments-${postId}`).classList.add('expanded');
+                if (!dino.jumping && !dino.ducking) {
+                    dino.jumping = true;
+                    dino.jumpVelocity = dino.jumpHeight;
                 }
-            }
+            });
             
-            // Like post
-            function likePost(postId) {
-                const likeBtn = document.querySelector(`.post-action[data-action="like"][data-post-id="${postId}"]`);
-                const currentCount = parseInt(likeBtn.textContent.match(/\((\d+)\)/)[1]) || 0;
-                likeBtn.innerHTML = `<i class="fas fa-thumbs-up"></i> Нравится (${currentCount + 1})`;
-                
-                // Animation effect
-                likeBtn.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    likeBtn.style.transform = 'scale(1)';
-                }, 300);
-            }
-            
-            // Initialize forum
-            renderPosts();
+            // Initial draw
+            drawScene();
         }
         
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
             setupTabs();
-            setupTelegramRedirect();
-            initForum();
+            initDinoGame();
+            
+            // Special animation for the message
+            const floatingText = document.querySelector('.floating-text');
+            setTimeout(() => {
+                floatingText.style.color = '#ff4e50';
+                floatingText.style.fontWeight = 'bold';
+            }, 2000);
         });
     </script>
 </body>
-</html>
+    </html>
