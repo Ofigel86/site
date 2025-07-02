@@ -22,6 +22,10 @@
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             --radius: 16px;
+            --dino-bg: #f7f7f7;
+            --dino-ground: #555;
+            --dino-sprite: #333;
+            --dino-obstacle: #2e8b57;
         }
 
         * {
@@ -32,7 +36,7 @@
 
         body {
             font-family: 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            background: linear-gradient(135deg, var(--primary), var(--secondary), #4a00e0);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             color: var(--text);
@@ -40,6 +44,37 @@
             min-height: 100vh;
             overflow-x: hidden;
             padding: 20px;
+        }
+
+        body.light-theme {
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(106, 17, 203, 0.2);
+            --text: #333;
+            --text-secondary: #555;
+            --dino-bg: #87ceeb;
+            --dino-ground: #8a5a44;
+            --dino-sprite: #444;
+            --dino-obstacle: #2e8b57;
+        }
+
+        body.dark-theme {
+            --card-bg: rgba(20, 20, 35, 0.9);
+            --card-border: rgba(148, 85, 255, 0.4);
+            --text: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --dino-bg: #222;
+            --dino-ground: #333;
+            --dino-sprite: #ddd;
+            --dino-obstacle: #3cb371;
+        }
+
+        body.purple-theme {
+            --card-bg: rgba(70, 20, 120, 0.8);
+            --card-border: rgba(200, 100, 255, 0.3);
+            --dino-bg: #4a235a;
+            --dino-ground: #6c3483;
+            --dino-sprite: #f39c12;
+            --dino-obstacle: #9b59b6;
         }
 
         @keyframes gradientBG {
@@ -89,169 +124,476 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Farewell section */
-        .farewell-section {
-            text-align: center;
-            padding: 60px 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: var(--radius);
-            margin: 40px 0;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid var(--accent);
+        .theme-switcher {
+            display: flex;
+            gap: 10px;
+            background: var(--card-bg);
+            padding: 8px 15px;
+            border-radius: 30px;
+            border: 1px solid var(--card-border);
         }
 
-        .farewell-section::before {
+        .theme-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .theme-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--card-border);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 18px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .tab-btn i {
+            font-size: 1.2rem;
+        }
+
+        .tab-btn.active {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn.active::after {
             content: '';
             position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255,78,80,0.1) 0%, transparent 70%);
-            z-index: 0;
+            height: 3px;
+            background: var(--accent);
         }
 
-        .farewell-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
+        .tab-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
         }
 
-        .farewell-icon {
-            font-size: 5rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-            animation: float 3s ease-in-out infinite;
+        .tab-content {
+            padding: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .farewell-title {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, #ff9a9e, #fad0c4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .tab-content.active {
+            display: block;
         }
 
-        .farewell-text {
-            font-size: 1.2rem;
+        /* Comparison content */
+        .comparison-list {
+            list-style: none;
             margin-bottom: 30px;
-            line-height: 1.8;
         }
 
-        .memories-grid {
+        .comparison-list li {
+            padding: 20px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            transition: var(--transition);
+            animation: slideIn 0.5s forwards;
+            opacity: 0;
+            transform: translateX(-20px);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .comparison-list li:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .comparison-list li:nth-child(1) { animation-delay: 0.1s; }
+        .comparison-list li:nth-child(2) { animation-delay: 0.2s; }
+        .comparison-list li:nth-child(3) { animation-delay: 0.3s; }
+        .comparison-list li:nth-child(4) { animation-delay: 0.4s; }
+        .comparison-list li:nth-child(5) { animation-delay: 0.5s; }
+
+        .comparison-icon {
+            font-size: 1.4rem;
+            color: var(--accent);
+            min-width: 30px;
+            padding-top: 3px;
+        }
+
+        .media-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
-            margin: 50px 0;
         }
 
-        .memory-card {
-            background: rgba(255, 255, 255, 0.05);
+        .media-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            height: 100%;
+        }
+
+        .media-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .media-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .media-body {
+            padding: 20px;
+        }
+
+        /* Channels content */
+        .channels-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .channel-card {
+            background: var(--card-bg);
             border-radius: var(--radius);
             padding: 25px;
             border: 1px solid var(--card-border);
             transition: var(--transition);
-            text-align: center;
-            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
         }
 
-        .memory-card:hover {
+        .channel-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,78,80,0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+            z-index: 0;
+        }
+
+        .channel-card:hover {
             transform: translateY(-10px);
             box-shadow: var(--shadow);
             border-color: var(--accent);
         }
 
-        .memory-icon {
+        .channel-icon {
             font-size: 2.5rem;
-            color: var(--accent);
             margin-bottom: 20px;
+            color: var(--accent);
+            z-index: 1;
         }
 
-        .memory-title {
+        .channel-name {
             font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            z-index: 1;
+        }
+
+        .channel-desc {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            z-index: 1;
+            flex-grow: 1;
+        }
+
+        .channel-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            color: var(--text);
+            font-weight: 600;
+            transition: var(--transition);
+            border: 1px solid var(--card-border);
+            text-decoration: none;
+            z-index: 1;
+            width: fit-content;
+        }
+
+        .channel-link:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateX(10px);
+            border-color: var(--accent);
+        }
+
+        /* Games content */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            border: 1px solid var(--card-border);
+            transition: var(--transition);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Dino Game */
+        .dino-container {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            border: 1px solid var(--card-border);
+        }
+
+        .dino-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .dino-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 1.2rem;
+        }
+
+        .dino-stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dino-game {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: var(--dino-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--accent);
+        }
+
+        #dino-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            z-index: 10;
+            color: white;
+        }
+        
+        .game-over h3 {
+            color: var(--accent);
             margin-bottom: 15px;
         }
 
-        .memory-desc {
-            color: var(--text-secondary);
+        .dino-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        /* Final message */
-        .final-message {
-            background: rgba(0, 0, 0, 0.7);
+        .dino-btn {
+            padding: 12px 25px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dino-btn:hover {
+            background: #ff2d2f;
+            transform: scale(1.05);
+        }
+
+        .dino-settings {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dino-setting {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dino-setting:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dino-setting.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Special Message */
+        .special-message {
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
             border-radius: var(--radius);
-            padding: 40px;
+            padding: 30px;
+            margin: 40px 0;
             text-align: center;
-            margin: 50px 0;
-            border: 1px solid var(--accent);
+            border: 2px dashed white;
             position: relative;
+            overflow: hidden;
         }
-
-        .final-message::after {
+        
+        .special-message::before {
             content: '';
             position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            border: 2px solid var(--accent);
-            border-radius: var(--radius);
-            z-index: -1;
-            animation: borderPulse 2s infinite;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: rotate(30deg);
+            z-index: 0;
+            animation: rotate 20s linear infinite;
         }
-
-        @keyframes borderPulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-
-        .final-title {
+        
+        .special-message-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .special-message h2 {
             font-size: 2.5rem;
             margin-bottom: 20px;
-            color: var(--accent);
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-
-        .final-text {
+        
+        .special-message p {
             font-size: 1.2rem;
             line-height: 1.8;
+            margin-bottom: 25px;
+            color: white;
             max-width: 800px;
-            margin: 0 auto;
+            margin-left: auto;
+            margin-right: auto;
         }
-
-        .signature {
-            margin-top: 30px;
-            font-style: italic;
-            font-size: 1.3rem;
-            color: var(--accent);
+        
+        .heart-icon {
+            color: #ff2d2f;
+            font-size: 3rem;
+            animation: heartbeat 1.2s infinite;
+            display: inline-block;
+            margin: 0 10px;
         }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 60px 0 30px;
-            margin-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
-
-        .copyright {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-top: 20px;
-        }
-
-        .hearts {
-            color: var(--accent);
-            animation: pulse 1.5s infinite;
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
         }
 
         /* Particles */
@@ -264,107 +606,312 @@
             z-index: -1;
         }
 
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0 20px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Animation for special text */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating-text {
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
-            .farewell-title {
-                font-size: 2.2rem;
+            .tab-buttons {
+                flex-direction: column;
             }
             
-            .final-title {
+            .tab-btn {
+                width: 100%;
+            }
+            
+            h1 {
                 font-size: 2rem;
             }
             
-            .memory-card {
+            .tab-content {
                 padding: 20px;
+            }
+            
+            .dino-header, .dino-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .special-message h2 {
+                font-size: 1.8rem;
+            }
+            
+            .special-message p {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
-<body>
+<body class="dark-theme">
     <!-- Particles Background -->
     <div id="particles-js"></div>
     
     <div class="container">
+        <!-- Special Message -->
+        <div class="special-message">
+            <div class="special-message-content">
+                <h2><i class="fas fa-heart heart-icon"></i> Спасибо за всё! <i class="fas fa-heart heart-icon"></i></h2>
+                <p>Дорогой друг, я знаю, что тебе сейчас грустно, но хочу чтобы ты знал - наша совместная работа была невероятно ценной для меня. Каждый твой вклад сделал этот проект особенным.</p>
+                <p>Помни, что даже если мы больше не работаем вместе, я всегда буду благодарен за то время, что мы провели, создавая этот сайт. Твои идеи и энтузиазм вдохновляли меня!</p>
+                <p class="floating-text">Ты навсегда останешься частью misssense!</p>
+            </div>
+        </div>
+        
         <header class="site-header">
             <div class="logo">
                 <i class="fas fa-gamepad logo-icon"></i>
                 <h1>misssense</h1>
             </div>
+            
+            <div class="theme-switcher">
+                <button class="theme-btn active" data-theme="dark">Тёмная</button>
+                <button class="theme-btn" data-theme="light">Светлая</button>
+                <button class="theme-btn" data-theme="purple">Фиолетовая</button>
+            </div>
         </header>
 
-        <!-- Farewell Section -->
-        <div class="farewell-section">
-            <div class="farewell-content">
-                <i class="fas fa-heart farewell-icon"></i>
-                <h2 class="farewell-title">Спасибо за всё!</h2>
-                <p class="farewell-text">
-                    Этот сайт был создан с любовью и страстью к игровому сообществу. 
-                    Каждая строчка кода, каждый дизайнерский элемент - всё это было сделано для вас. 
-                    Без вашей поддержки и вдохновения этот проект не стал бы таким, каким он есть сейчас.
-                </p>
-                
-                <div class="memories-grid">
-                    <div class="memory-card">
-                        <i class="fas fa-code memory-icon"></i>
-                        <h3 class="memory-title">Создание</h3>
-                        <p class="memory-desc">Часы программирования и отладки, чтобы создать идеальный пользовательский опыт</p>
+        <!-- Tabs Container -->
+        <div class="tabs-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="comparison">
+                    <i class="fas fa-balance-scale"></i> Сравнение
+                </button>
+                <button class="tab-btn" data-tab="channels">
+                    <i class="fas fa-link"></i> Каналы
+                </button>
+                <button class="tab-btn" data-tab="games">
+                    <i class="fas fa-gamepad"></i> Игры
+                </button>
+                <button class="tab-btn" data-tab="info">
+                    <i class="fas fa-info-circle"></i> О нас
+                </button>
+            </div>
+
+            <!-- Comparison Tab -->
+            <div id="comparison" class="tab-content active">
+                <ul class="comparison-list">
+                    <li>
+                        <div class="comparison-icon"><i class="fas fa-check-circle"></i></div>
+                        <div>
+                            <strong>Weave v2 проигрывает onetap v3 по резольверу</strong>
+                            <p>Точность определения позиции противника значительно выше в Onetap</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="comparison-icon"><i class="fas fa-sync-alt"></i></div>
+                        <div>
+                            <strong>Weave v2.5 имеет Roll AA в отличие от onetap v3</strong>
+                            <p>Уникальная функция, которая дает преимущество в определенных ситуациях</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="comparison-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div>
+                            <strong>Weave v2.5 анти-аимы на уровне onetap v3</strong>
+                            <p>Оба клиента обеспечивают отличную защиту от обнаружения</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="comparison-icon"><i class="fas fa-trophy"></i></div>
+                        <div>
+                            <strong>Fatality может быть лучше onetap v3 по резольверу</strong>
+                            <p>В некоторых ситуациях Fatality показывает превосходную точность</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="comparison-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div>
+                            <strong>Fatality может сравниться с Weave 2.5</strong>
+                            <p>По совокупности характеристик эти клиенты очень близки</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="media-container">
+                    <div class="media-card">
+                        <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Сравнение чит-клиентов" class="media-img">
+                        <div class="media-body">
+                            <h3>Визуальное сравнение</h3>
+                            <p>Интерфейсы различных чит-клиентов и их функционал</p>
+                        </div>
                     </div>
                     
-                    <div class="memory-card">
-                        <i class="fas fa-paint-brush memory-icon"></i>
-                        <h3 class="memory-title">Дизайн</h3>
-                        <p class="memory-desc">Тщательная проработка каждого элемента интерфейса для визуального удовольствия</p>
-                    </div>
-                    
-                    <div class="memory-card">
-                        <i class="fas fa-users memory-icon"></i>
-                        <h3 class="memory-title">Сообщество</h3>
-                        <p class="memory-desc">Вдохновение, полученное от ваших отзывов и участия в развитии проекта</p>
+                    <div class="media-card">
+                        <div class="media-body">
+                            <h3><i class="fas fa-cloud-sun"></i> Погода</h3>
+                            <div style="height: 150px; display: flex; align-items: center; justify-content: center;">
+                                <iframe src="https://www.meteoblue.com/en/weather/widget/daily/ip_romania_675514?geoloc=fixed&days=4&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&precipunit=MILLIMETER&coloured=coloured&pictoicon=1&maxtemperature=1&mintemperature=1&windspeed=1&windgust=0&winddirection=1&uv=0&humidity=0&precipitation=1&precipitationprobability=1&spot=1&pressure=0&layout=light" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; height: 100%;"></iframe>
+                            </div>
+                            <div style="text-align: center; margin-top: 10px;">
+                                <a href="https://www.meteoblue.com/en/weather/week/ip_romania_675514" target="_blank" rel="noopener" style="color: var(--accent);">meteoblue</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Final Message -->
-        <div class="final-message">
-            <h2 class="final-title">Покойся с миром, misssense</h2>
-            <p class="final-text">
-                Настало время попрощаться. Этот сайт был не просто проектом - он был частью меня. 
-                Каждая функция, каждая страница содержали частичку моей души. 
-                Я рад, что смог создать что-то, что принесло пользу и радость вам, дорогие пользователи.
-            </p>
-            <p class="final-text">
-                Хотя misssense завершает свой путь, воспоминания о нём останутся с нами. 
-                Пусть он покоится с миром, зная, что выполнил свою миссию.
-            </p>
-            <p class="signature">С уважением и благодарностью,<br>Создатель misssense</p>
-        </div>
-        
-        <footer>
-            <div class="memories-grid">
-                <div class="memory-card">
-                    <i class="fas fa-history memory-icon"></i>
-                    <h3 class="memory-title">Наше наследие</h3>
-                    <p class="memory-desc">Более 10 000 довольных пользователей</p>
+
+            <!-- Channels Tab -->
+            <div id="channels" class="tab-content">
+                <div class="channels-header">
+                    <h2><i class="fas fa-link"></i> Рекомендуемые каналы</h2>
+                    <p>Лучшие ресурсы по CS2 и чит-клиентам</p>
                 </div>
                 
-                <div class="memory-card">
-                    <i class="fas fa-star memory-icon"></i>
-                    <h3 class="memory-title">Наши достижения</h3>
-                    <p class="memory-desc">Лучший игровой ресурс 2023 года</p>
+                <div class="channels-grid">
+                    <!-- Channel 1 -->
+                    <div class="channel-card">
+                        <div class="channel-icon"><i class="fab fa-youtube"></i></div>
+                        <h3 class="channel-name">Мой кент</h3>
+                        <p class="channel-desc">Канал с обзорами игровых моментов, стримами и полезными советами по CS2</p>
+                        <a href="https://www.youtube.com/@komor444-l6m" target="_blank" rel="noopener" class="channel-link">
+                            <i class="fas fa-external-link-alt"></i> Перейти на канал
+                        </a>
+                    </div>
+                    
+                    <!-- Channel 2 -->
+                    <div class="channel-card">
+                        <div class="channel-icon"><i class="fab fa-youtube"></i></div>
+                        <h3 class="channel-name">Мой недо-канал</h3>
+                        <p class="channel-desc">Экспериментальный канал с тестами различных игровых механик и конфигураций</p>
+                        <a href="https://www.youtube.com/@sasa_didu" target="_blank" rel="noopener" class="channel-link">
+                            <i class="fas fa-external-link-alt"></i> Перейти на канал
+                        </a>
+                    </div>
+                    
+                    <!-- Channel 3 -->
+                    <div class="channel-card">
+                        <div class="channel-icon"><i class="fas fa-music"></i></div>
+                        <h3 class="channel-name">Нравится</h3>
+                        <p class="channel-desc">Подборка лучших игровых моментов и музыкальных треков для геймеров</p>
+                        <a href="https://www.youtube.com/watch?v=mImFz8mkaHo&list=PLHovnlOusNLiJz3sm0d5i2Evwa2LDLdrg" target="_blank" rel="noopener" class="channel-link">
+                            <i class="fas fa-external-link-alt"></i> Открыть плейлист
+                        </a>
+                    </div>
+                    
+                    <!-- Channel 4 -->
+                    <div class="channel-card">
+                        <div class="channel-icon"><i class="fab fa-discord"></i></div>
+                        <h3 class="channel-name">Дискорд канал моего друга</h3>
+                        <p class="channel-desc">Активное сообщество игроков CS2, где делятся опытом и находят команду</p>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1" target="_blank" rel="noopener" class="channel-link">
+                            <i class="fas fa-external-link-alt"></i> Присоединиться
+                        </a>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Games Tab -->
+            <div id="games" class="tab-content">
+                <h2><i class="fas fa-gamepad"></i> Игра "Динозаврик"</h2>
+                <p>Специально для тебя я починил игру! Наслаждайся :)</p>
                 
-                <div class="memory-card">
-                    <i class="fas fa-heart memory-icon"></i>
-                    <h3 class="memory-title">Наша любовь</h3>
-                    <p class="memory-desc">К сообществу, которое нас поддерживало</p>
+                <div class="dino-container">
+                    <div class="dino-header">
+                        <div class="dino-stats">
+                            <div class="dino-stat">
+                                <i class="fas fa-star"></i>
+                                <span id="dino-score">Очки: 0</span>
+                            </div>
+                            <div class="dino-stat">
+                                <i class="fas fa-trophy"></i>
+                                <span id="dino-highscore">Рекорд: 0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="dino-settings">
+                            <div class="dino-setting active" data-difficulty="easy">
+                                <i class="fas fa-baby"></i> Легко
+                            </div>
+                            <div class="dino-setting" data-difficulty="medium">
+                                <i class="fas fa-running"></i> Средне
+                            </div>
+                            <div class="dino-setting" data-difficulty="hard">
+                                <i class="fas fa-fire"></i> Сложно
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dino-game">
+                        <canvas id="dino-canvas"></canvas>
+                        <div class="game-over" id="game-over">
+                            <h3>Игра окончена!</h3>
+                            <p>Ваш счет: <span id="final-score">0</span></p>
+                            <button id="restart-game" class="dino-btn">
+                                <i class="fas fa-redo"></i> Играть снова
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="dino-controls">
+                        <button id="dino-start" class="dino-btn">
+                            <i class="fas fa-play"></i> Начать игру
+                        </button>
+                        <div class="dino-instructions">
+                            <i class="fas fa-info-circle"></i> Пробел/Клик = прыжок, Стрелка вниз = присесть
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <p class="copyright">
-                © 2019-2023 misssense | Все права защищены<br>
-                Создано с <span class="hearts">❤️</span> для игрового сообщества
-            </p>
+            <!-- Info Tab -->
+            <div id="info" class="tab-content">
+                <h2><i class="fas fa-info-circle"></i> О проекте misssense</h2>
+                
+                <div class="channels-grid">
+                    <div class="channel-card">
+                        <div class="channel-icon"><i class="fas fa-code"></i></div>
+                        <h3 class="channel-name">Наша миссия</h3>
+                        <p class="channel-desc">Предоставлять объективное сравнение чит-клиентов для CS2, помогая игрокам сделать осознанный выбор.</p>
+                    </div>
+                    
+                    <div class="channel-card">
+                        <div class="channel-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <h3 class="channel-name">Отказ от ответственности</h3>
+                        <p class="channel-desc">Использование читов может нарушать правила игр и привести к блокировке аккаунта. Все материалы представлены в ознакомительных целях.</p>
+                    </div>
+                    
+                    <div class="channel-card">
+                        <div class="channel-icon"><i class="fas fa-heart"></i></div>
+                        <h3 class="channel-name">Особая благодарность</h3>
+                        <p class="channel-desc">Этот проект не был бы таким особенным без твоего участия. Твои идеи, критика и поддержка сделали misssense тем, чем он является сегодня.</p>
+                    </div>
+                    
+                    <div class="channel-card">
+                        <div class="channel-icon"><i class="fas fa-handshake"></i></div>
+                        <h3 class="channel-name">Наше партнёрство</h3>
+                        <p class="channel-desc">Даже если мы больше не работаем вместе, я всегда буду с теплотой вспоминать наше сотрудничество. Ты навсегда останешься частью истории misssense!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p class="copyright">© 2023 misssense | Создано с <i class="fas fa-heart" style="color: #ff4e50;"></i> для особого человека</p>
+            <p class="copyright">Ты всегда будешь частью этого проекта!</p>
         </footer>
     </div>
 
@@ -374,39 +921,37 @@
         particlesJS('particles-js', {
             particles: {
                 number: { 
-                    value: 100, 
+                    value: 120, 
                     density: { 
                         enable: true, 
                         value_area: 800 
                     } 
                 },
                 color: { 
-                    value: "#ff4e50" 
+                    value: "#ffb6c1" 
                 },
                 shape: { 
-                    type: "circle" 
+                    type: "heart",
+                    options: {
+                        heart: {
+                            fill: true
+                        }
+                    }
                 },
                 opacity: { 
                     value: 0.7, 
                     random: true 
                 },
                 size: { 
-                    value: 4, 
+                    value: 10, 
                     random: true 
-                },
-                line_linked: { 
-                    enable: true, 
-                    distance: 150, 
-                    color: "#ff9a9e", 
-                    opacity: 0.4, 
-                    width: 1 
                 },
                 move: { 
                     enable: true, 
                     speed: 2, 
-                    direction: "none", 
+                    direction: "top", 
                     random: true,
-                    out_mode: "bounce"
+                    out_mode: "out"
                 }
             },
             interactivity: {
@@ -428,36 +973,303 @@
                         duration: 0.4 
                     },
                     push: { 
-                        particles_nb: 4 
+                        particles_nb: 8 
                     }
                 }
             }
         });
 
-        // Farewell animation
-        document.addEventListener('DOMContentLoaded', function() {
-            const farewellSection = document.querySelector('.farewell-section');
+        // Tab switching function
+        function setupTabs() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
             
-            // Animate in
-            setTimeout(() => {
-                farewellSection.style.transition = 'all 1s ease';
-                farewellSection.style.opacity = '1';
-                farewellSection.style.transform = 'translateY(0)';
-            }, 300);
+            // Show first tab by default
+            tabContents[0].classList.add('active');
+            tabButtons[0].classList.add('active');
             
-            // Heartbeat effect
-            setInterval(() => {
-                const hearts = document.querySelector('.hearts');
-                hearts.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    hearts.style.transform = 'scale(1)';
-                }, 300);
-            }, 1500);
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+                    
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Smooth scroll to the top of the tab container
+                    document.querySelector('.tabs-container').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                });
+            });
+        }
+
+        // Theme switching
+        const themeBtns = document.querySelectorAll('.theme-btn');
+        themeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme;
+                document.body.className = `${theme}-theme`;
+                
+                themeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Save theme preference
+                localStorage.setItem('theme', theme);
+            });
         });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.body.className = `${savedTheme}-theme`;
+        document.querySelector(`.theme-btn[data-theme="${savedTheme}"]`).classList.add('active');
+
+        // Dino Game - Working version
+        function initDinoGame() {
+            const canvas = document.getElementById('dino-canvas');
+            const ctx = canvas.getContext('2d');
+            const startBtn = document.getElementById('dino-start');
+            const restartBtn = document.getElementById('restart-game');
+            const scoreElement = document.getElementById('dino-score');
+            const highScoreElement = document.getElementById('dino-highscore');
+            const finalScoreElement = document.getElementById('final-score');
+            const gameOverElement = document.getElementById('game-over');
+            
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            // Game variables
+            let gameSpeed = 5;
+            let score = 0;
+            let highScore = localStorage.getItem('dinoHighScore') || 0;
+            let gameRunning = false;
+            let gameLoop;
+            
+            // Set high score
+            highScoreElement.textContent = `Рекорд: ${highScore}`;
+            
+            // Dino properties
+            const dino = {
+                x: 50,
+                y: canvas.height - 120,
+                width: 40,
+                height: 60,
+                jumping: false,
+                ducking: false,
+                jumpVelocity: 0,
+                jumpHeight: 20,
+                gravity: 0.8,
+                groundY: canvas.height - 50
+            };
+            
+            // Obstacles
+            let obstacles = [];
+            
+            // Draw dino
+            function drawDino() {
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dino-sprite').trim() || '#333';
+                
+                if (dino.ducking) {
+                    // Ducking position
+                    ctx.fillRect(dino.x, dino.y + 20, dino.width, dino.height - 20);
+                } else {
+                    // Standing position
+                    ctx.fillRect(dino.x, dino.y, dino.width, dino.height);
+                    
+                    // Draw eye
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(dino.x + 30, dino.y + 15, 5, 5);
+                }
+            }
+            
+            // Draw ground
+            function drawGround() {
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dino-ground').trim() || '#555';
+                ctx.fillRect(0, dino.groundY, canvas.width, canvas.height - dino.groundY);
+            }
+            
+            // Draw obstacles
+            function drawObstacles() {
+                obstacles.forEach(obstacle => {
+                    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dino-obstacle').trim() || '#2e8b57';
+                    ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                });
+            }
+            
+            // Draw scene
+            function drawScene() {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw background
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--dino-bg').trim() || '#f7f7f7';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw ground
+                drawGround();
+                
+                // Draw dino
+                drawDino();
+                
+                // Draw obstacles
+                drawObstacles();
+                
+                // Draw score
+                ctx.fillStyle = '#333';
+                ctx.font = '20px Arial';
+                ctx.fillText(`Очки: ${score}`, 20, 30);
+            }
+            
+            // Update game state
+            function update() {
+                // Update dino position
+                if (dino.jumping) {
+                    dino.y -= dino.jumpVelocity;
+                    dino.jumpVelocity -= dino.gravity;
+                    
+                    if (dino.y >= dino.groundY - dino.height) {
+                        dino.y = dino.groundY - dino.height;
+                        dino.jumping = false;
+                    }
+                }
+                
+                // Update obstacles
+                obstacles.forEach((obstacle, index) => {
+                    obstacle.x -= gameSpeed;
+                    
+                    // Remove obstacles that are off-screen
+                    if (obstacle.x + obstacle.width < 0) {
+                        obstacles.splice(index, 1);
+                        score += 10;
+                        scoreElement.textContent = `Очки: ${score}`;
+                    }
+                    
+                    // Check collision
+                    if (
+                        dino.x < obstacle.x + obstacle.width &&
+                        dino.x + dino.width > obstacle.x &&
+                        dino.y < obstacle.y + obstacle.height &&
+                        dino.y + dino.height > obstacle.y
+                    ) {
+                        endGame();
+                    }
+                });
+                
+                // Generate new obstacles
+                let obstacleChance = 0.01;
+                if (Math.random() < obstacleChance && obstacles.length < 3) {
+                    const height = Math.random() > 0.5 ? 30 : 50;
+                    const width = 20;
+                    obstacles.push({
+                        x: canvas.width,
+                        y: dino.groundY - height,
+                        width: width,
+                        height: height
+                    });
+                }
+                
+                // Increase difficulty
+                if (score > 0 && score % 100 === 0) {
+                    gameSpeed = 5 + Math.floor(score / 100) * 0.5;
+                }
+            }
+            
+            // Game loop
+            function gameStep() {
+                update();
+                drawScene();
+                
+                if (gameRunning) {
+                    gameLoop = requestAnimationFrame(gameStep);
+                }
+            }
+            
+            // Start game
+            function startGame() {
+                if (gameRunning) return;
+                
+                gameRunning = true;
+                score = 0;
+                obstacles = [];
+                gameSpeed = 5;
+                dino.jumping = false;
+                dino.ducking = false;
+                dino.y = dino.groundY - dino.height;
+                
+                scoreElement.textContent = `Очки: ${score}`;
+                gameOverElement.style.display = 'none';
+                
+                gameStep();
+            }
+            
+            // End game
+            function endGame() {
+                gameRunning = false;
+                cancelAnimationFrame(gameLoop);
+                
+                gameOverElement.style.display = 'block';
+                finalScoreElement.textContent = score;
+                
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('dinoHighScore', highScore);
+                    highScoreElement.textContent = `Рекорд: ${highScore}`;
+                }
+            }
+            
+            // Event listeners
+            startBtn.addEventListener('click', startGame);
+            restartBtn.addEventListener('click', startGame);
+            
+            document.addEventListener('keydown', (e) => {
+                if (!gameRunning) return;
+                
+                if ((e.code === 'Space' || e.code === 'ArrowUp') && !dino.jumping && !dino.ducking) {
+                    dino.jumping = true;
+                    dino.jumpVelocity = dino.jumpHeight;
+                }
+                
+                if (e.code === 'ArrowDown') {
+                    dino.ducking = true;
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                if (e.code === 'ArrowDown') {
+                    dino.ducking = false;
+                }
+            });
+            
+            canvas.addEventListener('click', () => {
+                if (!gameRunning) return startGame();
+                
+                if (!dino.jumping && !dino.ducking) {
+                    dino.jumping = true;
+                    dino.jumpVelocity = dino.jumpHeight;
+                }
+            });
+            
+            // Initial draw
+            drawScene();
+        }
         
-        // Farewell message when closing
-        window.addEventListener('beforeunload', function(e) {
-            return "Спасибо, что были частью misssense!";
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setupTabs();
+            initDinoGame();
+            
+            // Special animation for the message
+            const floatingText = document.querySelector('.floating-text');
+            setTimeout(() => {
+                floatingText.style.color = '#ff4e50';
+                floatingText.style.fontWeight = 'bold';
+            }, 2000);
         });
     </script>
 </body>
